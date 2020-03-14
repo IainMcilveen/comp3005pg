@@ -14,8 +14,8 @@ create table bank
 create table publisher
 	(pub_id 	varchar(5),
 	 bank_id	varchar(5),
-	 name		varchar(30),
-	 address	varchar(75),
+	 pub_name		varchar(30),
+	 pub_address	varchar(75),
 	 email		varchar(70),
 	 primary key (pub_id),
 	 foreign key (bank_id) references bank

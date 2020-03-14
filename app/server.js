@@ -16,8 +16,10 @@ let user = null;
 
 //routes
 app.get("/",logCheck);
-app.post("/login",checkLogin)
-app.get("/books", getBooks);
+app.post("/login",checkLogin);
+app.post("/logout", logout);
+app.get("/books/:isbn?", getBooks);
+app.get("/cart", getCart);
 
 //Login page
 function logCheck(req,res){
@@ -28,6 +30,11 @@ function logCheck(req,res){
     }else{
         
     }
+}
+
+function logout(req,res){
+    user = null;
+    res.send("/");
 }
 
 function checkLogin(req,res){
@@ -45,28 +52,45 @@ function checkLogin(req,res){
             if(password === data.password){
                 user = data;
                 res.send("/")
+            }else{
+                res.send("invalid username or password");
             }
         })
         .catch(function (error) {
             console.log('ERROR:', error);
-            res.send("invalid username or password")
+            res.send("invalid username or password");
         });
 
 };
 
 //get all of the books
 function getBooks(req,res){
-    //query for all books
-    db.many('select * from book')
-        .then(function (data) {
-            console.log('DATA:', data);
-            res.send(data);
-        })
-        .catch(function (error) {
-            console.log('ERROR:', error);
-    });
-    
+    //if a specific book isnt specified
+    if(req.params.isbn == undefined){
+        //query for all books
+        db.many('select * from book')
+            .then(function (data) {
+                console.log('DATA:', data);
+                res.render("pages/books",{'books':data});
+            })
+            .catch(function (error) {
+                console.log('ERROR:', error);
+        });
+    }else{
+        db.one("select * from book where isbn = $1",req.params.isbn)
+            .then(function (data) {
+                console.log('DATA:', data);
+                res.render("pages/book",{'book':data});
+            })
+            .catch(function (error) {
+                console.log('ERROR:', error);
+        });
+    }
+        
 }
+
+//show whats in the current users cart
+function getCart(req,res){}
 
 //start app, should probably establish connection to db first
 app.listen(3000);
