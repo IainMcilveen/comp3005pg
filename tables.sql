@@ -1,10 +1,3 @@
-create table author
-	(author_id		varchar(5),
-	 first_name 	varchar(12),
-	 last_name		varchar(15),
-	 primary key (author_id)
-	);
-	
 create table bank
 	(bank_id	varchar(5),
 	 balance	numeric(9,2),
@@ -32,7 +25,6 @@ create table contact
 create table book
 	(ISBN 		varchar(13),
 	 pub_id 	varchar(5),
-	 author_id	varchar(5),
 	 title 		varchar(50),
 	 genre		varchar(25),
 	 num_pages  int,
@@ -41,9 +33,18 @@ create table book
 		check (quantity > 0),
 	 threshold	int,
 	 primary key (ISBN),
-	 foreign key (author_id) references author,
 	 foreign key (pub_id) references publisher
 	);
+
+create table author
+	(author_id		varchar(5),
+	 ISBN			varchar(13),
+	 first_name 	varchar(12),
+	 last_name		varchar(15),
+	 primary key (author_id,ISBN),
+	 foreign key (ISBN) references book
+	);
+	
 	
 create table users
 	(user_id	varchar(5),
