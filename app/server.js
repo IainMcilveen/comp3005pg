@@ -19,6 +19,7 @@ app.get("/",logCheck);
 app.post("/login",checkLogin);
 app.post("/logout", logout);
 app.get("/books/:isbn?", getBooks);
+app.get("/publisher/id", getPublisher);
 app.get("/cart", getCart);
 
 //Login page
@@ -26,7 +27,7 @@ function logCheck(req,res){
     if(user == null){
         res.render("pages/login");
     }else if(user.admin == false){
-        console.log("xd");
+        res.render("pages/header");
     }else{
         
     }
@@ -77,10 +78,11 @@ function getBooks(req,res){
                 console.log('ERROR:', error);
         });
     }else{
-        db.one("select * from book where isbn = $1",req.params.isbn)
+        db.many("select * from (book natural join publisher) natural join author where isbn = $1",req.params.isbn)
             .then(function (data) {
-                console.log('DATA:', data);
+                console.log('DATA book:', data);
                 res.render("pages/book",{'book':data});
+                //res.render("pages/book",{'book':data});
             })
             .catch(function (error) {
                 console.log('ERROR:', error);
@@ -88,6 +90,9 @@ function getBooks(req,res){
     }
         
 }
+
+//get a publisher
+function getPublisher(req,res){}
 
 //show whats in the current users cart
 function getCart(req,res){}

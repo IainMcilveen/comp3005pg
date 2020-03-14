@@ -1,8 +1,15 @@
 html
     head
-        title #{book.title}
+        title #{book[0].title}
     body
         include ../pages/header
-        h1 Book: #{book.title} 
-        p price #{book.price}
+        h1 Book: #{book[0].title} 
+        p author(s):
+            each val in book
+                p name: #{val.first_name} #{val.last_name} 
+        p publisher:
+            a(href="/publisher/"+book[0].pub_id) #{book[0].pub_name}
+        p number of pages: #{book[0].num_pages}
+        p price: #{book[0].price}
+
         

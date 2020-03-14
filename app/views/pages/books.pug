@@ -5,5 +5,7 @@ html
         include ../pages/header
         h2 Books:
         each val in books
-            a(href="/books/"+val.isbn) #{val.title} genre: #{val.genre} price #{val.price}$
-            br
+            div#book
+                a(href="/books/"+val.isbn) #{val.title} 
+                p genre: #{val.genre} 
+                p price #{val.price}$
