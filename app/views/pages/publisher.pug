@@ -1,0 +1,11 @@
+html
+    head
+        title #{pub[0].pub_name}
+    body
+        include ../pages/header
+        h1 Publisher: #{pub[0].pub_name} 
+        p address: #{pub[0].pub_address}
+        p email: #{pub[0].email}
+        p phone number(s):
+            each val in pub
+                p   #{val.phone_number} 

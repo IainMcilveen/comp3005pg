@@ -19,7 +19,7 @@ app.get("/",logCheck);
 app.post("/login",checkLogin);
 app.post("/logout", logout);
 app.get("/books/:isbn?", getBooks);
-app.get("/publisher/id", getPublisher);
+app.get("/publisher/:id", getPublisher);
 app.get("/cart", getCart);
 
 //Login page
@@ -92,7 +92,18 @@ function getBooks(req,res){
 }
 
 //get a publisher
-function getPublisher(req,res){}
+function getPublisher(req,res){
+    db.many('select * from publisher natural join contact where pub_id = $1',req.params.id)
+        .then(function (data) {
+            console.log('DATA:', data);
+            res.render("pages/publisher",{"pub":data});
+            
+        })
+        .catch(function (error) {
+            console.log('ERROR:', error);
+        });
+
+}
 
 //show whats in the current users cart
 function getCart(req,res){}
