@@ -159,7 +159,6 @@ function toCheckOut(req,res){
 
 //checkout all of the items that a currently in the cart
 
-//to do: lower the quantity
 function checkOutCart(req,res){
 
     let order_num = Math.round(Math.random() * 1000000);
@@ -193,6 +192,7 @@ function checkOutCart(req,res){
                 .catch(function (error) {
                     console.log('ERROR:', error);
                 });
+            await t.none("update book set quantity = quantity - 1 where isbn = $1",books[book].isbn);
         }
         await t.none("delete from check_out where user_id = $1",user.user_id);
     })
