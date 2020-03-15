@@ -18,6 +18,7 @@ let user = null;
 app.get("/",logCheck);
 app.post("/login",checkLogin);
 app.post("/logout", logout);
+app.post("/addCart",addToCart);
 app.get("/books/:isbn?", getBooks);
 app.get("/publisher/:id", getPublisher);
 app.get("/cart", getCart);
@@ -103,6 +104,16 @@ function getPublisher(req,res){
             console.log('ERROR:', error);
         });
 
+}
+
+//add a book to current users cart
+function addToCart(req,res){
+    data = Object.keys(req.query);
+    db.none('insert into check_out values($1,$2,$3,(select NOW()))',[user.user_id,data[0],data[1]])
+        .catch(function (error) {
+            console.log('ERROR:', error);
+        });
+    res.send("added to cart");
 }
 
 //show whats in the current users cart

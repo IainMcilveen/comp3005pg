@@ -60,9 +60,22 @@ create table check_out
 	(user_id	varchar(5),
 	 ISBN 		varchar(13),
 	 price		numeric(5,2),
-	 amount		int,
-	 primary key (user_id,ISBN),
+	 time_check timestamp,
+	 primary key (user_id,ISBN,time_check),
 	 foreign key (user_id) references users,
+	 foreign key (ISBN) references book
+	);
+
+create table user_order
+	(user_order_id serial,
+	 date_order		date,
+	 ISBN 		varchar(13),
+	 price		numeric(5,2),
+	 prf_cdr_num varchar(19),
+	 prf_address varchar(75),
+	 order_progress varchar(15)
+		check (order_progress in ('Not Shipped', 'In Transit', 'Delivered')),
+	 primary key (user_order_id),
 	 foreign key (ISBN) references book
 	);
 	

@@ -3,10 +3,12 @@ html
         title Books 
     body
         include ../pages/header
+        script(src="/js/addCart.js")
         h2 Books:
         each val in books
             div#book
                 a(href="/books/"+val.isbn) #{val.title} 
                 p genre: #{val.genre} 
-                p price #{val.price}$
+                p price: #{val.price}$
+                button#addcart(type="button", onclick="addCart('"+val.isbn+'&'+val.price+"')") Add to cart
             br
