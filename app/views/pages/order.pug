@@ -1,0 +1,16 @@
+html
+    head
+        title #{order[0].order_number}
+    body
+        include ../pages/header
+        h1 Order Number: #{order[0].order_number} 
+        -let tot_cost = 0;
+        p book(s):
+            each val in order
+                div#book
+                    a(href="/books/"+val.isbn) #{val.title} 
+                    p cost: #{val.price}
+                    -tot_cost += Number(val.price)
+                
+        p order date: #{order[0].date_order}
+        p total price paid: #{tot_cost}$

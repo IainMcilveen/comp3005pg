@@ -70,6 +70,7 @@ create table user_order
 	(user_order_id serial,
 	 user_id		varchar(5),
 	 order_id 		int,
+	 order_number	int,
 	 date_order		date,
 	 ISBN 		varchar(13),
 	 price		numeric(5,2),

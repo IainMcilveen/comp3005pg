@@ -27,6 +27,7 @@ app.post("/remCart",remFromCart);
 app.get("/toCheckOut",toCheckOut);
 app.post("/checkOut/:address/:credit", checkOutCart)
 app.get("/books/:isbn?", getBooks);
+app.get("/orders/:num?",getOrders);
 app.get("/publisher/:id", getPublisher);
 app.get("/cart", getCart);
 
@@ -157,9 +158,11 @@ function toCheckOut(req,res){
 }
 
 //checkout all of the items that a currently in the cart
+
+//to do: lower the quantity
 function checkOutCart(req,res){
 
-    console.log(req.params);
+    let order_num = Math.round(Math.random() * 1000000);
 
     //get all of the books in the cart, order them, then remove them from cart
     db.task(async t => {
@@ -172,20 +175,21 @@ function checkOutCart(req,res){
         for(book in books){
             console.log(books[book]);
             data[0] = books[book].order_id;
-            data[1] = user.user_id;
-            data[2] = books[book].isbn;
-            data[3] = books[book].price;
+            data[1] = order_num;
+            data[2] = user.user_id;
+            data[3] = books[book].isbn;
+            data[4] = books[book].price;
             if(req.params.credit != "-1"){
-                data[4] = req.params.credit;
+                data[5] = req.params.credit;
             }else{
-                data[4] = user.cdr_num;
+                data[5] = user.cdr_num;
             }
             if(req.params.address != "-1"){
-                data[5] = req.params.address;
+                data[6] = req.params.address;
             }else{
-                data[5] = user.address;
+                data[6] = user.address;
             }
-            await t.none("insert into user_order(order_id,user_id,date_order,ISBN,price,prf_cdr_num,prf_address,order_progress) values($1,$2,CURRENT_DATE,$3,$4,$5,$6,'Not Shipped')",data)
+            await t.none("insert into user_order(order_id,order_number,user_id,date_order,ISBN,price,prf_cdr_num,prf_address,order_progress) values($1,$2,$3,CURRENT_DATE,$4,$5,$6,$7,'Not Shipped')",data)
                 .catch(function (error) {
                     console.log('ERROR:', error);
                 });
@@ -193,7 +197,31 @@ function checkOutCart(req,res){
         await t.none("delete from check_out where user_id = $1",user.user_id);
     })
 
-    res.send("/");
+    res.send("Order Number: "+order_num);
+}
+
+//get a specific order or all if not specified
+function getOrders(req,res){
+    
+    if(req.params.num == undefined){
+        db.many("select order_number, date_order, sum(price) as tot_cost from user_order group by order_number, date_order")
+            .then(function (data) {
+                res.render("pages/orders",{'orders':data});
+                
+            })
+            .catch(function (error) {
+                console.log('ERROR:', error);
+            });
+    }else{
+        db.many("select * from user_order natural join book where order_number = $1",req.params.num)
+        .then(function (data) {
+            res.render("pages/order",{'order':data});
+            
+        })
+        .catch(function (error) {
+            console.log('ERROR:', error);
+        });
+    }
 }
 
 //start app, should probably establish connection to db first

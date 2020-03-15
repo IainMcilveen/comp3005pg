@@ -1,0 +1,12 @@
+html
+    head
+        title Your Orders 
+    body
+        include ../pages/header
+        h2 Orders:
+        each val in orders
+            div#orders
+                a(href="/orders/"+val.order_number) Order Number: #{val.order_number} 
+                p date: #{val.date_order} 
+                p price: #{val.tot_cost}$
+            br

@@ -13,8 +13,8 @@ function checkOut(){
     xhttp.onreadystatechange = function() {
         
         if(this.readyState==4 && this.status==200){
-            alert("items checked out");
-            window.location = xhttp.responseText;   
+            alert(xhttp.responseText);
+            window.location = "/";
         }
         
     };
