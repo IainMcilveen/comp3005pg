@@ -2,13 +2,13 @@
 const express = require('express');
 const app = express();
 const pug = require('pug');
-let bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.set("view engine", "pug");
 app.use(express.static("public"));
 
 //db
-const pgp = require('pg-promise')(/* options */);
+const pgp = require('pg-promise')();
 const db = pgp('postgres://postgres:password@localhost:5432/project');
 
 //current user
@@ -19,6 +19,7 @@ app.get("/",logCheck);
 app.post("/login",checkLogin);
 app.post("/logout", logout);
 app.post("/addCart",addToCart);
+app.post("/remCart",remFromCart);
 app.get("/books/:isbn?", getBooks);
 app.get("/publisher/:id", getPublisher);
 app.get("/cart", getCart);
@@ -109,7 +110,7 @@ function getPublisher(req,res){
 //add a book to current users cart
 function addToCart(req,res){
     data = Object.keys(req.query);
-    db.none('insert into check_out values($1,$2,$3,(select NOW()))',[user.user_id,data[0],data[1]])
+    db.none('insert into check_out(user_id,ISBN,price,title) values($1,$2,$3,$4)',[user.user_id,data[0],data[1],data[2]])
         .catch(function (error) {
             console.log('ERROR:', error);
         });
@@ -117,7 +118,32 @@ function addToCart(req,res){
 }
 
 //show whats in the current users cart
-function getCart(req,res){}
+function getCart(req,res){
+    db.query("select * from check_out where user_id = $1",user.user_id)
+        .then(function (data) {
+            console.log('DATA:', data);
+            res.render("pages/cart",{'books':data});
+            
+        })
+        .catch(function (error) {
+            console.log('ERROR:', error);
+        });
+}
+
+//removing books from cart
+function remFromCart(req,res){
+    data = Object.keys(req.query);
+    console.log("qqq");
+    console.log(data);
+    db.none("delete from check_out where user_id = $2 and isbn = $3 and order_id = $1",data)
+        .then(function(){
+            console.log("worked xd");
+            res.send("/cart")
+        })
+        .catch(function (error) {
+            console.log('ERROR:', error);
+        });
+}
 
 //start app, should probably establish connection to db first
 app.listen(3000);

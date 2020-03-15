@@ -45,7 +45,6 @@ create table author
 	 foreign key (ISBN) references book
 	);
 	
-	
 create table users
 	(user_id	varchar(5),
 	 user_name 	varchar(20),
@@ -58,10 +57,11 @@ create table users
 	
 create table check_out
 	(user_id	varchar(5),
+	 order_id	serial,
 	 ISBN 		varchar(13),
 	 price		numeric(5,2),
-	 time_check timestamp,
-	 primary key (user_id,ISBN,time_check),
+	 title 		varchar(50),
+	 primary key (user_id,ISBN,order_id),
 	 foreign key (user_id) references users,
 	 foreign key (ISBN) references book
 	);
