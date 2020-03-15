@@ -15,14 +15,23 @@ const db = pgp('postgres://postgres:password@localhost:5432/project');
 let user = null;
 
 //routes
+
+//general
 app.get("/",logCheck);
+
+//client
 app.post("/login",checkLogin);
 app.post("/logout", logout);
 app.post("/addCart",addToCart);
 app.post("/remCart",remFromCart);
+app.get("/toCheckOut",toCheckOut);
+app.post("/checkOut/:address/:credit", checkOutCart)
 app.get("/books/:isbn?", getBooks);
 app.get("/publisher/:id", getPublisher);
 app.get("/cart", getCart);
+
+//administrator 
+
 
 //Login page
 function logCheck(req,res){
@@ -133,16 +142,58 @@ function getCart(req,res){
 //removing books from cart
 function remFromCart(req,res){
     data = Object.keys(req.query);
-    console.log("qqq");
-    console.log(data);
     db.none("delete from check_out where user_id = $2 and isbn = $3 and order_id = $1",data)
         .then(function(){
-            console.log("worked xd");
             res.send("/cart")
         })
         .catch(function (error) {
             console.log('ERROR:', error);
         });
+}
+
+//redirect the user to the checkout page
+function toCheckOut(req,res){
+    res.render("pages/checkOut");
+}
+
+//checkout all of the items that a currently in the cart
+function checkOutCart(req,res){
+
+    console.log(req.params);
+
+    //get all of the books in the cart, order them, then remove them from cart
+    db.task(async t => {
+        let books = await t.many("select * from check_out where user_id = $1",user.user_id)
+            .catch(function (error) {
+                console.log('ERROR:', error);
+            });
+        console.log(books);
+        let data = [];
+        for(book in books){
+            console.log(books[book]);
+            data[0] = books[book].order_id;
+            data[1] = user.user_id;
+            data[2] = books[book].isbn;
+            data[3] = books[book].price;
+            if(req.params.credit != "-1"){
+                data[4] = req.params.credit;
+            }else{
+                data[4] = user.cdr_num;
+            }
+            if(req.params.address != "-1"){
+                data[5] = req.params.address;
+            }else{
+                data[5] = user.address;
+            }
+            await t.none("insert into user_order(order_id,user_id,date_order,ISBN,price,prf_cdr_num,prf_address,order_progress) values($1,$2,CURRENT_DATE,$3,$4,$5,$6,'Not Shipped')",data)
+                .catch(function (error) {
+                    console.log('ERROR:', error);
+                });
+        }
+        await t.none("delete from check_out where user_id = $1",user.user_id);
+    })
+
+    res.send("/");
 }
 
 //start app, should probably establish connection to db first

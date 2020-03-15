@@ -4,10 +4,13 @@ html
     body
         include ../pages/header
         script(src="/js/remCart.js")
+        script(src="/js/toCheckOut.js")
         h2 books in your cart:
-        each val in books
-            div#book
-                a(href="/books/"+val.isbn) #{val.title} 
-                p price: #{val.price}$
-                button#addcart(type="button", onclick="remCart('"+val.user_id+'&'+val.isbn+'&'+val.order_id+"')") Remove from cart
-            br
+        div#books
+            each val in books
+                div#book
+                    a(href="/books/"+val.isbn) #{val.title} 
+                    p price: #{val.price}$
+                    button#addcart(type="button", onclick="remCart('"+val.user_id+'&'+val.isbn+'&'+val.order_id+"')") Remove from cart
+                br
+        button#addcart(type="button", onclick="toCheckOut()") check out items

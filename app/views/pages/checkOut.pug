@@ -1,0 +1,11 @@
+html
+    head
+        title check out
+        
+    body
+        p="Credit Card Number (If different from credit card associated with this user):"
+        input#credit(type="textbox")
+        p="Address (If different from one associated with this user):"
+        input#address(type="textbox")
+        button#checkout(type="button", onclick="checkOut()") checkOut
+        script(src="/js/checkout.js")

@@ -1,9 +1,12 @@
+delete from user_order;
+delete from check_out;
+delete from store_order;
 delete from users;
 delete from author;
-delete from bank;
-delete from publisher;
-delete from contact;
 delete from book;
+delete from contact;
+delete from publisher;
+delete from bank;
 insert into users values('00001','admin','password','NULL','NULL','true');
 insert into users values('00002','apple','123','4444555566667777','31 First Avenue Drive','false');
 insert into users values('00003','gamer','123','9999888877776666','1234 Main Street','false');
