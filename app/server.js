@@ -32,7 +32,11 @@ app.get("/publisher/:id", getPublisher);
 app.get("/cart", getCart);
 
 //administrator 
-
+app.get("/bookManage",getBookManage);
+app.get("/stats",getStats);
+app.get("/addBook",getAddBook);
+app.post("/removeBook/:isbn",removeBook);
+app.post("/addBook",addBook);
 
 //Login page
 function logCheck(req,res){
@@ -41,7 +45,7 @@ function logCheck(req,res){
     }else if(user.admin == false){
         res.render("pages/header");
     }else{
-        
+        res.render("pages/adminHeader");
     }
 }
 
@@ -234,6 +238,33 @@ function getOrders(req,res){
         });
     }
 }
+
+//gets the book management page
+function getBookManage(req,res){
+
+}
+
+//removes specified book
+function removeBook(req,res){
+
+}
+
+//gets the book adding page
+function getAddBook(req,res){
+
+}
+
+//adds the new book
+function addBook(req,res){
+
+}
+
+//get the book statistics
+function getStats(req,res){
+
+}
+
+
 
 //start app, should probably establish connection to db first
 app.listen(3000);
