@@ -4,11 +4,27 @@ html
     body
         include ../pages/header
         script(src="/js/addCart.js")
+        script(src="/js/searchBooks.js")
+        h3 search by:
+        p genre 
+            input(type="radio", id="genre", name="search", value="genre") 
+        p title
+            input(type="radio", id="title", name="search", value="title")
+        p ISBN
+            input(type="radio", id="ISBN", name="search", value="ISBN") 
+        p author
+            input(type="radio", id="author", name="search", value="author") 
+        input#searchbox(type="textbox")
+        button#search(type="button", onclick="searchBooks()") Search Books
+        br
+        button#clearSearch(type="button", onclick="clearSearch()") Clear Search
         h2 Books:
-        each val in books
-            div#book
-                a(href="/books/"+val.isbn) #{val.title} 
-                p genre: #{val.genre} 
-                p price: #{val.price}$
-                button#addcart(type="button", onclick="addCart('"+val.isbn+'&'+val.price+'&'+val.title+"')") Add to cart
-            br
+        div#books
+            each val in books
+                div#book
+                    a(href="/books/"+val.isbn) #{val.title} 
+                    p genre: #{val.genre} 
+                    p price: #{val.price}$
+                    p author: #{val.first_name} #{val.last_name}
+                    button#addcart(type="button", onclick="addCart('"+val.isbn+'&'+val.price+'&'+val.title+"')") Add to cart
+                br

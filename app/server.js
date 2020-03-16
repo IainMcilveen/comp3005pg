@@ -26,7 +26,7 @@ app.post("/addCart",addToCart);
 app.post("/remCart",remFromCart);
 app.get("/toCheckOut",toCheckOut);
 app.post("/checkOut/:address/:credit", checkOutCart)
-app.get("/books/:isbn?", getBooks);
+app.get("/books/:isbn?/:query?", getBooks);
 app.get("/orders/:num?",getOrders);
 app.get("/publisher/:id", getPublisher);
 app.get("/cart", getCart);
@@ -81,7 +81,7 @@ function getBooks(req,res){
     //if a specific book isnt specified
     if(req.params.isbn == undefined){
         //query for all books
-        db.many('select * from book')
+        db.many('select * from (book natural join publisher) natural join author')
             .then(function (data) {
                 console.log('DATA:', data);
                 res.render("pages/books",{'books':data});
@@ -89,7 +89,7 @@ function getBooks(req,res){
             .catch(function (error) {
                 console.log('ERROR:', error);
         });
-    }else{
+    }else if(req.params.isbn != "search"){
         db.many("select * from (book natural join publisher) natural join author where isbn = $1",req.params.isbn)
             .then(function (data) {
                 console.log('DATA book:', data);
@@ -99,9 +99,20 @@ function getBooks(req,res){
             .catch(function (error) {
                 console.log('ERROR:', error);
         });
+    }else{
+        let text = "select * from (book natural join publisher) natural join author where "+req.params.query;
+        db.query(text)
+            .then(function (data) {
+                //console.log('DATA book:', data);
+                res.render("pages/books",{'books':data});
+            })
+            .catch(function (error) {
+                console.log('ERROR:', error);
+        });
     }
         
 }
+
 
 //get a publisher
 function getPublisher(req,res){
