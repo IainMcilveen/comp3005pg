@@ -43,6 +43,7 @@ create table author
 	 last_name		varchar(15),
 	 primary key (author_id,ISBN),
 	 foreign key (ISBN) references book
+	 	on delete cascade
 	);
 	
 create table users

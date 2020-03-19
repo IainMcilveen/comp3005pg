@@ -34,7 +34,7 @@ app.get("/cart", getCart);
 //administrator 
 app.get("/bookManage",getBookManage);
 app.get("/stats",getStats);
-app.get("/addBook",getAddBook);
+app.get("/addBookPage",getAddBook);
 app.post("/removeBook/:isbn",removeBook);
 app.post("/addBook",addBook);
 
@@ -85,7 +85,7 @@ function getBooks(req,res){
     //if a specific book isnt specified
     if(req.params.isbn == undefined){
         //query for all books
-        db.many('select * from (book natural join publisher) natural join author')
+        db.many('select distinct(ISBN),first_name,last_name,price,genre,title from (book natural join publisher) natural join author')
             .then(function (data) {
                 console.log('DATA:', data);
                 res.render("pages/books",{'books':data});
@@ -241,11 +241,26 @@ function getOrders(req,res){
 
 //gets the book management page
 function getBookManage(req,res){
-
+    //query for all books to show admins all books
+    db.many('select distinct(ISBN),first_name,last_name,price,genre,title from (book natural join publisher) natural join author')
+        .then(function (data) {
+            console.log(data);
+            res.render("pages/manageBook",{'books':data});
+        })
+        .catch(function (error) {
+            console.log('ERROR:', error);
+        });
 }
 
 //removes specified book
 function removeBook(req,res){
+    console.log(req.params.isbn);
+    db.none('delete from book where isbn = $1',req.params.isbn)
+        .catch(function (error) {
+            console.log('ERROR:', error);
+            res.send("failed");
+    });
+    res.send("success")
 
 }
 

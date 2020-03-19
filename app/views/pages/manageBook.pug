@@ -1,0 +1,17 @@
+html
+    head
+        title Manage Books 
+    body
+        include ../pages/adminHeader
+        script(src="/js/removeBook.js")
+        br
+        h2 All Books:
+        div#books
+            each val in books
+                div#book
+                    a(href="/books/"+val.isbn) #{val.title} 
+                    p genre: #{val.genre} 
+                    p price: #{val.price}$
+                    p author: #{val.first_name} #{val.last_name}
+                    button#addcart(type="button", onclick="removeBook('"+val.isbn+"')") remove book
+                br
