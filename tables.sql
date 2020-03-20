@@ -37,7 +37,7 @@ create table book
 	);
 
 create table author
-	(author_id		varchar(5),
+	(author_id		serial,
 	 ISBN			varchar(13),
 	 first_name 	varchar(12),
 	 last_name		varchar(15),
@@ -47,7 +47,7 @@ create table author
 	);
 	
 create table users
-	(user_id	varchar(5),
+	(user_id	serial,
 	 user_name 	varchar(20),
 	 password 	varchar(20),
 	 cdr_num 	varchar(19),
@@ -57,7 +57,7 @@ create table users
 	);
 	
 create table check_out
-	(user_id	varchar(5),
+	(user_id	serial,
 	 order_id	serial,
 	 ISBN 		varchar(13),
 	 price		numeric(5,2),

@@ -4,6 +4,11 @@ function addBook(){
         alert("please enter a title.")
         return;
     }
+    let genre = document.getElementById("genre").value;
+    if(genre.trim() == ""){
+        alert("please enter a genre.")
+        return;
+    }
     let author = document.getElementById("author").value;
     temp = author.trim().split(" ");
     if(temp.length < 2 || temp[0] == "" || temp[1] == ""){
@@ -15,7 +20,7 @@ function addBook(){
         alert("please enter valid length 13 isbn");
         return;
     }
-    let numpages = document.getElementById("numpages").value;
+    let numpages = Number(document.getElementById("numpages").value);
     if(numpages < 1){
         alert("please enter a valid number of pages");
         return;
@@ -25,17 +30,22 @@ function addBook(){
         alert("please enter a valid price");
         return;
     }
-    let threshold = document.getElementById("threshold").value;
+    let threshold = Number(document.getElementById("threshold").value);
     if(threshold < 0){
         alert("please enter a valid threshold");
         return;
     }
-    let quantity = document.getElementById("quantity").value;
-    if(quantity < 1 || quantity > threshold){
+    let quantity = Number(document.getElementById("quantity").value);
+    if(quantity < 1 || quantity < threshold){
         alert("please enter a valid quantity");
         return;
     }
-    book = {"title":title,"first_name":temp[0],"last_name":temp[1],"isbn":isbn,"num_pages":numpages,"price":price,"threshold":threshold,"quantity":quantity}
+    let pub = Number(document.getElementById("publisher").value);
+    if(pub < 0 || pub.toString().length != 5){
+        alert("please enter a valid publisher id");
+        return;
+    }
+    book = {"title":title,"pub_id":pub,"first_name":temp[0],"last_name":temp[1],"isbn":isbn,"num_pages":numpages,"genre":genre,"price":price,"threshold":threshold,"quantity":quantity}
     console.log(book);
 
 
