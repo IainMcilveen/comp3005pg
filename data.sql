@@ -17,7 +17,7 @@ insert into publisher values('30002','20001','Chapmen Books','534 Ford Street','
 insert into contact values('40001','30001','613-519-8865');
 insert into contact values('40002','30001','902-835-4288');
 insert into contact values('40003','30002','519-566-8263');
-insert into book values('0-0001-0000-0','30001','Infinite JestInfinite Jest','fantasy','400','10.53','10','5');
+insert into book values('0-0001-0000-0','30001','Infinite JestInfinite Jest','fantasy','400','10.53','6','5');
 insert into book values('0-0002-0000-0','30001','Titan Oath','Sci-Fi','350','12.67','8','2');
 insert into book values('0-0003-0000-0','30001','Best Beloved','Romance','150','8.52','12','9');
 insert into book values('0-0004-0000-0','30001','The Butcher in the House','Crime','432','15.53','8','2');

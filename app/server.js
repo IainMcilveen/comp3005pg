@@ -158,7 +158,8 @@ function getCart(req,res){
 //removing books from cart
 function remFromCart(req,res){
     data = Object.keys(req.query);
-    db.none("delete from check_out where user_id = $2 and isbn = $3 and order_id = $1",data)
+    console.log(data);
+    db.none("delete from check_out where user_id = $1 and isbn = $3 and order_id = $2",data)
         .then(function(){
             res.send("/cart")
         })
@@ -188,12 +189,21 @@ function checkOutCart(req,res){
         let data = [];
         for(book in books){
             //check to see if the book is going to need to be ordered
-            console.log("q: "+books[book].quantity)
-            console.log("t: "+books[book].threshold)
-            if((books[book].quantity-1) < books[book].threshold){
+            let thresh = Number(books[book].quantity)-Number(1)
+            if(thresh < books[book].threshold){
                 console.log("threshold breached");
-                prevOrders = await t.query('select * from user_order where ISBN = $1',books[book].isbn)
-                console.log(prevOrders);
+                let tally = 0;
+                let prevOrders = await t.query('select * from user_order where ISBN = $1',books[book].isbn)
+                for(prev in prevOrders){
+                    if(((new Date).getTime() - prevOrders[prev].date_order) < 2592000000){
+                        tally++;
+                    }
+                }
+                if(tally < 5){
+                    tally = 5;
+                }
+                await t.none('insert into store_order values(DEFAULT,$1,$2,$3,$4)',[books[book].isbn,tally,'Not Shipped','Ordering new book of this book']);
+            
             }
 
             //get books and update their values

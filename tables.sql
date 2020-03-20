@@ -84,11 +84,12 @@ create table user_order
 	);
 	
 create table store_order
-	(store_order_id	varchar(5),
+	(store_order_id	serial,
 	 ISBN 			varchar(13),
-	 threshold		int,
+	 quantity		int,
 	 order_progress varchar(15)
 		check (order_progress in ('Not Shipped', 'In Transit', 'Delivered')),
+	 email			varchar(100),
 	 primary key (store_order_id),
 	 foreign key (ISBN) references book
 	);
