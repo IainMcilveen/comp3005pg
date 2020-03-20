@@ -85,7 +85,7 @@ function getBooks(req,res){
     //if a specific book isnt specified
     if(req.params.isbn == undefined){
         //query for all books
-        db.many('select distinct(ISBN),first_name,last_name,price,genre,title from (book natural join publisher) natural join author')
+        db.many('select distinct on (isbn) * from book natural join author natural join publisher')
             .then(function (data) {
                 console.log('DATA:', data);
                 res.render("pages/books",{'books':data});
@@ -188,9 +188,12 @@ function checkOutCart(req,res){
         let data = [];
         for(book in books){
             //check to see if the book is going to need to be ordered
+            console.log("q: "+books[book].quantity)
+            console.log("t: "+books[book].threshold)
             if((books[book].quantity-1) < books[book].threshold){
                 console.log("threshold breached");
-                
+                prevOrders = await t.query('select * from user_order where ISBN = $1',books[book].isbn)
+                console.log(prevOrders);
             }
 
             //get books and update their values
