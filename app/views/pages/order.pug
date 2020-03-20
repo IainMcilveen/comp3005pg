@@ -5,12 +5,14 @@ html
         include ../pages/header
         h1 Order Number: #{order[0].order_number} 
         -let tot_cost = 0;
+        hr
         p book(s):
             each val in order
                 div#book
                     a(href="/books/"+val.isbn) #{val.title} 
                     p cost: #{val.price}
                     -tot_cost += Number(val.price)
+                hr
                 
         p order date: #{order[0].date_order}
         p order progress: #{order[0].order_progress}

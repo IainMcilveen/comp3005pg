@@ -1,0 +1,27 @@
+html
+    head
+        title Statistics 
+    body
+        include ../pages/adminHeader
+        br
+        h2 sales vs expenditure:
+        div#salevsex 
+            p total sales: #{stats[0].price}$
+            p total expenditure: #{stats[0].expenditure}$
+            p total profit: #{stats[0].price - stats[0].expenditure}$
+        hr
+        div#salesgenre
+            h4 genres:
+            each val in sp_genre
+                p #{val.genre}    |    total sales: #{val.sum}$
+        hr
+        div#salesauthor
+            h4 authors: 
+            each val in sp_author
+                p #{val.first_name} #{val.last_name}    |    total sales: #{val.sum}$
+        hr
+        div#salepub 
+            h4 publishers:
+            each val in sp_pub
+                p #{val.pub_name}    |    total sales: #{val.sum}$
+    

@@ -18,6 +18,7 @@ html
         button#search(type="button", onclick="searchBooks()") Search Books
         br
         button#clearSearch(type="button", onclick="clearSearch()") Clear Search
+        hr
         h2 Books:
         div#books
             each val in books
@@ -28,3 +29,4 @@ html
                     p author: #{val.first_name} #{val.last_name}
                     button#addcart(type="button", onclick="addCart('"+val.isbn+'&'+val.price+'&'+val.title+"')") Add to cart
                 br
+                hr

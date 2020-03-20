@@ -337,6 +337,15 @@ function addBook(req,res){
 //get the book statistics
 function getStats(req,res){
 
+    db.task(async t => {
+        let stats = await t.query('select sum(price) as price, sum(expenditure) as expenditure from user_order natural join book ');
+        let sp_genre = await t.query('select sum(price), genre from user_order natural join book group by genre');
+        let sp_author = await t.query('select sum(price), first_name, last_name from user_order natural join (book natural join author) group by first_name,last_name');
+        let sp_publisher = await t.query('select sum(price), pub_name from user_order natural join (book natural join publisher) group by pub_name');
+        res.render("pages/stats",{'stats':stats,"sp_genre":sp_genre,"sp_pub":sp_publisher,"sp_author":sp_author})
+    });
+    
+
 }
 
 

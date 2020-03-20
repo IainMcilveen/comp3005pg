@@ -13,4 +13,5 @@ html
                     p price: #{val.price}$
                     button#addcart(type="button", onclick="remCart('"+val.user_id+'&'+val.isbn+'&'+val.order_id+"')") Remove from cart
                 br
+                hr
         button#addcart(type="button", onclick="toCheckOut()") check out items
