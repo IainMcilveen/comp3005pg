@@ -269,7 +269,7 @@ function getAddBook(req,res){
     res.render("pages/addBook");
 }
 
-//adds the new book - multiple authors?
+//adds the new book
 function addBook(req,res){
 
     newBook = req.body;
@@ -277,7 +277,6 @@ function addBook(req,res){
 
     //first query from all isbns to make sure there are gonna be no repeats
     db.task(async t => {
-        console.log("getting isbn:")
         let isbns = await t.many("select ISBN from book")
             .catch(function (error) {
                 console.log('ERROR:', error);
@@ -288,19 +287,19 @@ function addBook(req,res){
         }
 
         //add book if isbn doesnt exist
-        console.log("book insert:")
         await t.none('insert into book values($1,$2,$3,$4,$5,$6,$7,$8)',[newBook.isbn,newBook.pub_id,newBook.title,newBook.genre,newBook.num_pages,newBook.price,newBook.quantity,newBook.threshold])
             .catch(function (error) {
                 console.log('ERROR:', error);
                 res.send("error adding book");
             });
         //add author
-        console.log("author:")
-        await t.none('insert into author(ISBN,first_name,last_name) values($1,$2,$3)',[newBook.isbn,newBook.first_name,newBook.last_name])
-            .catch(function (error) {
-                console.log('ERROR:', error);
-                res.send("error adding author");
+        for(i in newBook.authors){
+            await t.none('insert into author(ISBN,first_name,last_name) values($1,$2,$3)',[newBook.isbn,newBook.authors[i][0],newBook.authors[i][1]])
+                .catch(function (error) {
+                    console.log('ERROR:', error);
+                    res.send("error adding author");
             });
+        }
 
     });
     res.send("success");

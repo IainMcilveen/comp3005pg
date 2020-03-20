@@ -10,7 +10,14 @@ function addBook(){
         return;
     }
     let author = document.getElementById("author").value;
-    temp = author.trim().split(" ");
+    tempall = author.trim().split(",");
+    authors = []
+    for(i in tempall){
+        temp = []
+        temp.push(tempall[i].trim().split(" ")[0]);
+        temp.push(tempall[i].trim().split(" ")[1]);
+        authors.push(temp);
+    }
     if(temp.length < 2 || temp[0] == "" || temp[1] == ""){
         alert("please enter the first and last name separated by a space");
         return;
@@ -45,7 +52,7 @@ function addBook(){
         alert("please enter a valid publisher id");
         return;
     }
-    book = {"title":title,"pub_id":pub,"first_name":temp[0],"last_name":temp[1],"isbn":isbn,"num_pages":numpages,"genre":genre,"price":price,"threshold":threshold,"quantity":quantity}
+    book = {"title":title,"pub_id":pub,"authors":authors,"isbn":isbn,"num_pages":numpages,"genre":genre,"price":price,"threshold":threshold,"quantity":quantity}
     console.log(book);
 
 
