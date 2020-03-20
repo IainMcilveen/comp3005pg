@@ -180,13 +180,20 @@ function checkOutCart(req,res){
 
     //get all of the books in the cart, order them, then remove them from cart
     db.task(async t => {
-        let books = await t.many("select * from check_out where user_id = $1",user.user_id)
+        let books = await t.many("select * from (check_out natural join book) where user_id = $1",user.user_id)
             .catch(function (error) {
                 console.log('ERROR:', error);
             });
         console.log(books);
         let data = [];
         for(book in books){
+            //check to see if the book is going to need to be ordered
+            if((books[book].quantity-1) < books[book].threshold){
+                console.log("threshold breached");
+                
+            }
+
+            //get books and update their values
             console.log(books[book]);
             data[0] = books[book].order_id;
             data[1] = order_num;
@@ -208,6 +215,14 @@ function checkOutCart(req,res){
                     console.log('ERROR:', error);
                 });
             await t.none("update book set quantity = quantity - 1 where isbn = $1",books[book].isbn);
+            //update the balance in the banks
+            let bankInfo = await t.one('select * from book natural join (publisher natural join bank) where ISBN = $1',books[book].isbn)
+                .catch(function (error) {
+                    console.log('ERROR:', error);
+                });
+            await t.none("update bank set balance = balance + $1 where bank_id = $2",[books[book].price,bankInfo.bank_id]);
+            
+
         }
         await t.none("delete from check_out where user_id = $1",user.user_id);
     })
@@ -219,7 +234,7 @@ function checkOutCart(req,res){
 function getOrders(req,res){
     
     if(req.params.num == undefined){
-        db.many("select order_number, date_order, sum(price) as tot_cost from user_order group by order_number, date_order")
+        db.query("select order_number, date_order, sum(price) as tot_cost from user_order group by order_number, date_order")
             .then(function (data) {
                 res.render("pages/orders",{'orders':data});
                 
@@ -228,7 +243,7 @@ function getOrders(req,res){
                 console.log('ERROR:', error);
             });
     }else{
-        db.many("select * from user_order natural join book where order_number = $1",req.params.num)
+        db.query("select * from user_order natural join book where order_number = $1",req.params.num)
         .then(function (data) {
             res.render("pages/order",{'order':data});
             
