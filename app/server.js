@@ -65,7 +65,6 @@ function checkLogin(req,res){
     console.log(username);
     db.one('select * from users where user_name = $1',username)
         .then(function (data) {
-            console.log('DATA:', data);
             if(password === data.password){
                 user = data;
                 res.send("/")
@@ -87,7 +86,6 @@ function getBooks(req,res){
         //query for all books
         db.many('select distinct on (isbn) * from book natural join author natural join publisher')
             .then(function (data) {
-                console.log('DATA:', data);
                 res.render("pages/books",{'books':data});
             })
             .catch(function (error) {
@@ -96,9 +94,7 @@ function getBooks(req,res){
     }else if(req.params.isbn != "search"){
         db.many("select * from (book natural join publisher) natural join author where isbn = $1",req.params.isbn)
             .then(function (data) {
-                console.log('DATA book:', data);
                 res.render("pages/book",{'book':data});
-                //res.render("pages/book",{'book':data});
             })
             .catch(function (error) {
                 console.log('ERROR:', error);
@@ -107,7 +103,6 @@ function getBooks(req,res){
         let text = "select * from (book natural join publisher) natural join author where "+req.params.query;
         db.query(text)
             .then(function (data) {
-                //console.log('DATA book:', data);
                 res.render("pages/books",{'books':data});
             })
             .catch(function (error) {
@@ -122,7 +117,6 @@ function getBooks(req,res){
 function getPublisher(req,res){
     db.many('select * from publisher natural join contact where pub_id = $1',req.params.id)
         .then(function (data) {
-            console.log('DATA:', data);
             res.render("pages/publisher",{"pub":data});
             
         })
@@ -185,7 +179,6 @@ function checkOutCart(req,res){
             .catch(function (error) {
                 console.log('ERROR:', error);
             });
-        console.log(books);
         let data = [];
         for(book in books){
             //check to see if the book is going to need to be ordered
