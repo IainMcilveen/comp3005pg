@@ -266,12 +266,14 @@ function removeBook(req,res){
 
 //gets the book adding page
 function getAddBook(req,res){
-
+    res.render("pages/addBook");
 }
 
 //adds the new book
 function addBook(req,res){
 
+    //first query from all isbns to make sure there are gonna be no repeats
+    console.log(req.body);
 }
 
 //get the book statistics

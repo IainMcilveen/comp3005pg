@@ -1,0 +1,27 @@
+html
+    head
+        title Add Book
+        
+    body 
+        include ../pages/adminHeader
+        script(src="/js/addNewBook.js")
+        br
+        h1 Insert Book Information:
+        p="Title:"
+        input#title(type="textbox")
+        p="author:"
+        input#author(type="textbox")
+        p="ISBN:"
+        input#isbn(type="textbox")
+        p="genre:"
+        input#genre(type="textbox")
+        p="number of pages:"
+        input#numpages(type="textbox")
+        p="price:"
+        input#price(type="textbox")
+        p="quantity"
+        input#quantity(type="textbox")
+        p="threshold"
+        input#threshold(type="textbox")
+        br
+        button#login(type="button", onclick="addBook()") Add Book
