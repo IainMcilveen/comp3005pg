@@ -270,7 +270,7 @@ function getOrders(req,res){
 //gets the book management page
 function getBookManage(req,res){
     //query for all books to show admins all books
-    db.many('select distinct(ISBN),first_name,last_name,price,genre,title from (book natural join publisher) natural join author')
+    db.many('select distinct on (isbn) * from book natural join author natural join publisher')
         .then(function (data) {
             //console.log(data);
             res.render("pages/manageBook",{'books':data});
@@ -315,7 +315,7 @@ function addBook(req,res){
         }
 
         //add book if isbn doesnt exist
-        await t.none('insert into book values($1,$2,$3,$4,$5,$6,$7,$8)',[newBook.isbn,newBook.pub_id,newBook.title,newBook.genre,newBook.num_pages,newBook.price,newBook.quantity,newBook.threshold])
+        await t.none('insert into book values($1,$2,$3,$4,$5,$6,$7,$8,$9)',[newBook.isbn,newBook.pub_id,newBook.title,newBook.genre,newBook.num_pages,newBook.price,newBook.quantity,newBook.threshold,newBook.expenditure])
             .catch(function (error) {
                 console.log('ERROR:', error);
                 res.send("error adding book");

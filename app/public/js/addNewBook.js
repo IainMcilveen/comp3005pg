@@ -37,6 +37,11 @@ function addBook(){
         alert("please enter a valid price");
         return;
     }
+    let expenditure = document.getElementById("expenditure").value;
+    if(expenditure < 0 || expenditure > price){
+        alert("please enter a valid expenditure");
+        return;
+    }
     let threshold = Number(document.getElementById("threshold").value);
     if(threshold < 0){
         alert("please enter a valid threshold");
@@ -52,7 +57,7 @@ function addBook(){
         alert("please enter a valid publisher id");
         return;
     }
-    book = {"title":title,"pub_id":pub,"authors":authors,"isbn":isbn,"num_pages":numpages,"genre":genre,"price":price,"threshold":threshold,"quantity":quantity}
+    book = {"title":title,"pub_id":pub,"authors":authors,"isbn":isbn,"num_pages":numpages,"genre":genre,"price":price,"expenditure":expenditure,"threshold":threshold,"quantity":quantity}
     console.log(book);
 
 

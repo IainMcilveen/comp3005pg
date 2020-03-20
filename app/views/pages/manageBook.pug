@@ -13,6 +13,7 @@ html
                     a(href="/books/"+val.isbn) #{val.title} 
                     p genre: #{val.genre} 
                     p price: #{val.price}$
+                    p expenditure: #{val.expenditure}$
                     p author: #{val.first_name} #{val.last_name}
                     button#removeBook(type="button", onclick="removeBook('"+val.isbn+"')") remove book
                 br

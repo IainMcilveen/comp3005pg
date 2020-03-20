@@ -32,6 +32,7 @@ create table book
 	 quantity	int
 		check (quantity > 0),
 	 threshold	int,
+	 expenditure numeric(5,2),
 	 primary key (ISBN),
 	 foreign key (pub_id) references publisher
 	);
