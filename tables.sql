@@ -87,7 +87,7 @@ create table user_order
 create table store_order
 	(store_order_id	serial,
 	 ISBN 			varchar(13),
-	 quantity		int,
+	 order_quantity		int,
 	 order_progress varchar(15)
 		check (order_progress in ('Not Shipped', 'In Transit', 'Delivered')),
 	 email			varchar(100),
