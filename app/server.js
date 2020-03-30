@@ -65,8 +65,8 @@ function newAccount(req,res){
 //take data sent in from the user and create a new user account
 function createAccount(req,res){
     
+    //get the data for the new user
     newUser = req.body;
-    console.log(newUser);
 
     //first query from all isbns to make sure there are gonna be no repeats
     db.task(async t => {
@@ -96,10 +96,9 @@ function checkLogin(req,res){
 		res.status(200).send("Already logged in.");
 		return;
     }
-    console.log(req.body);
+    //get the username and password and query to see if its valid
 	let username = req.body.username;
     let password = req.body.password;
-    console.log(username);
     db.one('select * from users where user_name = $1',username)
         .then(function (data) {
             if(password === data.password){
@@ -189,7 +188,6 @@ function getCart(req,res){
 //removing books from cart
 function remFromCart(req,res){
     data = Object.keys(req.query);
-    console.log(data);
     db.none("delete from check_out where user_id = $1 and isbn = $3 and order_id = $2",data)
         .then(function(){
             res.send("/cart")
@@ -237,7 +235,6 @@ function checkOutCart(req,res){
             }
 
             //get books and update their values
-            console.log(books[book]);
             data[0] = books[book].order_id;
             data[1] = order_num;
             data[2] = user.user_id;
@@ -302,7 +299,6 @@ function getBookManage(req,res){
     //query for all books to show admins all books
     db.many('select distinct on (isbn) * from book natural join author natural join publisher')
         .then(function (data) {
-            //console.log(data);
             res.render("pages/manageBook",{'books':data});
         })
         .catch(function (error) {
@@ -312,7 +308,7 @@ function getBookManage(req,res){
 
 //removes specified book
 function removeBook(req,res){
-    console.log(req.params.isbn);
+    //delete the book specified
     db.none('delete from book where isbn = $1',req.params.isbn)
         .catch(function (error) {
             console.log('ERROR:', error);
@@ -330,8 +326,8 @@ function getAddBook(req,res){
 //adds the new book
 function addBook(req,res){
 
+    //get the data for the new book
     newBook = req.body;
-    console.log(newBook);
 
     //first query from all isbns to make sure there are gonna be no repeats
     db.task(async t => {
