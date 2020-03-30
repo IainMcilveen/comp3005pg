@@ -176,7 +176,6 @@ function addToCart(req,res){
 function getCart(req,res){
     db.query("select * from check_out where user_id = $1",user.user_id)
         .then(function (data) {
-            console.log('DATA:', data);
             res.render("pages/cart",{'books':data});
             
         })
