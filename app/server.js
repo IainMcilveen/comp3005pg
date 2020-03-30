@@ -277,7 +277,7 @@ function checkOutCart(req,res){
 function getOrders(req,res){
     
     if(req.params.num == undefined){
-        db.query("select order_number, date_order, sum(price) as tot_cost from user_order group by order_number, date_order where user_id = $1",user.user_id)
+        db.query("select order_number, date_order, sum(price) as tot_cost from user_order where user_id = '$1' group by order_number, date_order",user.user_id)
             .then(function (data) {
                 res.render("pages/orders",{'orders':data});
                 
