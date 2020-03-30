@@ -18,6 +18,8 @@ let user = null;
 
 //general
 app.get("/",logCheck);
+app.get("/newAccount",newAccount);
+app.post("/createAccount",createAccount);
 
 //client
 app.post("/login",checkLogin);
@@ -38,7 +40,7 @@ app.get("/addBookPage",getAddBook);
 app.post("/removeBook/:isbn",removeBook);
 app.post("/addBook",addBook);
 
-//Login page
+//Login page/ home page
 function logCheck(req,res){
     if(user == null){
         res.render("pages/login");
@@ -49,11 +51,46 @@ function logCheck(req,res){
     }
 }
 
+//log out the user
 function logout(req,res){
     user = null;
     res.send("/");
 }
 
+//send the user to the create account page
+function newAccount(req,res){
+    res.render("pages/createAccount");
+}
+
+//take data sent in from the user and create a new user account
+function createAccount(req,res){
+    
+    newUser = req.body;
+    console.log(newUser);
+
+    //first query from all isbns to make sure there are gonna be no repeats
+    db.task(async t => {
+        let users = await t.many("select user_name from users")
+            .catch(function (error) {
+                console.log('ERROR:', error);
+            });
+        if(users.includes(newUser.user_name) == true){
+            res.send("username was already taken");
+            return;
+        }
+
+        //add user if user_name doesnt exist
+        await t.none('insert into users(user_name,password,cdr_num,address,admin) values($1,$2,$3,$4,$5)',[newUser.user_name,newUser.password,newUser.cdr_num,newUser.address,false])
+            .catch(function (error) {
+                console.log('ERROR:', error);
+                res.send("error creating new account");
+        });
+
+    });
+    res.send("user created");
+}
+
+//check to see if the user is logged in or not, then let them log in
 function checkLogin(req,res){
 	if(user != null){
 		res.status(200).send("Already logged in.");
@@ -240,7 +277,7 @@ function checkOutCart(req,res){
 function getOrders(req,res){
     
     if(req.params.num == undefined){
-        db.query("select order_number, date_order, sum(price) as tot_cost from user_order group by order_number, date_order")
+        db.query("select order_number, date_order, sum(price) as tot_cost from user_order group by order_number, date_order where user_id = $1",user.user_id)
             .then(function (data) {
                 res.render("pages/orders",{'orders':data});
                 

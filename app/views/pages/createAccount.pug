@@ -1,0 +1,17 @@
+html
+    head
+        title Create Account
+        
+    body 
+        script(src="/js/createAccount.js")
+        br
+        h1 Insert user information:
+        p="Username:"
+        input#user_name(type="textbox")
+        p="password:"
+        input#password(type="textbox")
+        p="credit card number:"
+        input#cdr_num(type="textbox")
+        p="shipping address:"
+        input#address(type="textbox")
+        button#createAccount(type="button", onclick="createAccount()") Create Account

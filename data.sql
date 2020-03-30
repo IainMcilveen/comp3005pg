@@ -8,7 +8,7 @@ delete from contact;
 delete from publisher;
 delete from bank;
 insert into users values(DEFAULT,'admin','password','NULL','NULL','true');
-insert into users values(DEFAULT,'apple','123','4444555566667777','31 First Avenue Drive','false');
+insert into users values(DEFAULT,'apple','123','4444555566667777','29 First Avenue Drive','false');
 insert into users values(DEFAULT,'gamer','123','9999888877776666','1234 Main Street','false');
 insert into bank values('20001','0');
 insert into bank values('20002','0');
