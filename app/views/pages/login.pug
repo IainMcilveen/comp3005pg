@@ -3,11 +3,15 @@ html
         title Login
         
     body
+        h1(style="text-align:center;") Look Inna Book
+        hr
+        br
         p="Username:"
         input#username(type="textbox")
         p="password:"
         input#password(type="textbox")
         button#login(type="button", onclick="getLogin()") Login
+        br
         br
         a(href="/newAccount") Create New Account
         script(src="/js/login.js")
