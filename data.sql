@@ -1,3 +1,4 @@
+/* This is the default values used to test the database */
 delete from user_order;
 delete from check_out;
 delete from store_order;
